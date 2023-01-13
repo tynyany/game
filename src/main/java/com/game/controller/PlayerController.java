@@ -46,18 +46,19 @@ public class PlayerController {
         } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
-    /*
     @PostMapping("/players/{id}")
     public ResponseEntity<Player> updatePlayer(@PathVariable("id") Long id, @RequestBody Player player) {
-        if (id <= 0 || PlayerServiceImpl.checkPlayerParameters(player)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        PlayerParam responsePlayer = playerService.updatePlayer(id, requestPlayer);
-        if (responsePlayer == null) {
+        if (id <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if ((player.getName() != null && !playerService.checkName(player.getName()))
+                || (player.getTitle() != null && !playerService.checkTitle(player.getName()))
+                || (player.getExperience() != null && !playerService.checkExperience(player.getExperience()))
+                || (player.getBirthday() != null && !playerService.checkBirthday(player.getBirthday())))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Player newPlayer = playerService.updatePlayer(id, player);
+        if (newPlayer == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else return new ResponseEntity<>(responsePlayer, HttpStatus.OK);
+        } else return new ResponseEntity<>(newPlayer, HttpStatus.OK);
     }
-
-     */
 
 
 

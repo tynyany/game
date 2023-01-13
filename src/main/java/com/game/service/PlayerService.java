@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PlayerService {
@@ -21,5 +22,12 @@ public interface PlayerService {
 
     boolean deletePlayer(Long id);
 
+    boolean checkName(String name);
+
+    boolean checkTitle(String title);
+
+    boolean checkExperience(Integer experience);
+
+    boolean checkBirthday(Date birthday);
 
 }

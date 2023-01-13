@@ -8,7 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,6 +35,8 @@ public class PlayerServiceImpl implements PlayerService{
 
     @Override
     public Player createPlayer(Player player) {
+        // TODO delete
+        /*
         if (player == null
                 || player.getName() == null
                 || player.getTitle() == null
@@ -42,10 +46,26 @@ public class PlayerServiceImpl implements PlayerService{
                 || player.getExperience() == null) {
             return null;
         }
-        if (!checkPlayerParameters(player)) return null;
+        */
+        if (!checkPlayerParametersCreate(player)) return null;
         if (player.getBanned() == null) player.setBanned(false);
         setLevelAndExperienceUntilNextLevel(player);
         return playerRepository.saveAndFlush(player);
+    }
+
+    @Override
+    public Player updatePlayer(Long id, Player player) {
+        if (!playerRepository.findById(id).isPresent()) return null;
+        Player existPlayer = getPlayer(id);
+        if (player.getName() != null && checkName(player.getName())) existPlayer.setName(player.getName());
+        if (player.getTitle() != null && checkTitle(player.getTitle())) existPlayer.setTitle(player.getTitle());
+        if (player.getRace() != null) existPlayer.setRace(player.getRace());
+        if (player.getProfession() != null) existPlayer.setProfession(player.getProfession());
+        if (player.getExperience() != null && checkExperience(player.getExperience())) existPlayer.setExperience(player.getExperience());
+        if (player.getBirthday() != null && checkBirthday(player.getBirthday())) existPlayer.setBirthday(player.getBirthday());
+        if (player.getBanned() != null) existPlayer.setBanned(player.getBanned());
+        setLevelAndExperienceUntilNextLevel(existPlayer);
+        return playerRepository.save(existPlayer);
     }
 
     @Override
@@ -53,11 +73,6 @@ public class PlayerServiceImpl implements PlayerService{
         if (playerRepository.findById(id).isPresent()) {
             return playerRepository.findById(id).get();
         }
-        return null;
-    }
-
-    @Override
-    public Player updatePlayer(Long id, Player player) {
         return null;
     }
 
@@ -86,24 +101,35 @@ public class PlayerServiceImpl implements PlayerService{
         return 50 * (lvl + 1) * (lvl + 2) - exp;
     }
 
-    public static boolean checkPlayerParameters(Player player) {
-        if (player.getName().length() < 1 || player.getName().length() > 12) return false;
-        // TODO: null?
-
-        if (player.getTitle().length() < 1 || player.getTitle().length() > 30) return false;
-        // TODO: null?
-
-        if (player.getExperience() < 0 || player.getExperience() > 10_000_000) return false;
-
-        if (player.getBirthday().getTime() < 0) return false;
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(player.getBirthday());
-        if (calendar.get(Calendar.YEAR) < 2_000 || calendar.get(Calendar.YEAR) > 3_000) return false;
-
-        return true;
+    @Override
+    public boolean checkName(String name) {
+        return name != null && name.length() >= 1 && name.length() <= 12;
     }
 
+    @Override
+    public boolean checkTitle(String title) {
+        return title != null && title.length() >= 1 && title.length() <= 30;
+    }
+
+    @Override
+    public boolean checkExperience(Integer experience) {
+        return experience != null && experience >= 0 && experience <= 10_000_000;
+    }
+
+    @Override
+    public boolean checkBirthday(Date birthday) {
+        if (birthday == null) return false;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(birthday);
+        return calendar.get(Calendar.YEAR) >= 2_000 && calendar.get(Calendar.YEAR) <= 3_000;
+    }
+
+    public boolean checkPlayerParametersCreate(Player player) {
+        return checkName(player.getName())
+                && checkTitle(player.getTitle())
+                && checkExperience(player.getExperience())
+                && checkBirthday(player.getBirthday());
+    }
 
 
 }
