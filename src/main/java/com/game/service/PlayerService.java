@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface PlayerService {
 
-    List<Player> getPlayerList(Specification<Player> specification);
+    List<Player> getPlayersList(Specification<Player> specification);
 
-    Page<Player> getPlayerList(Specification<Player> specification, Pageable sortedByName);
+    Page<Player> getPlayersList(Specification<Player> specification, Pageable pageable);
 
     Player createPlayer(Player player);
 

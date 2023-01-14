@@ -124,6 +124,7 @@ public class Player {
         this.untilNextLevel = untilNextLevel;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

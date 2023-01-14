@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,29 +23,17 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public List<Player> getPlayerList(Specification<Player> specification) {
-        return null;
+    public List<Player> getPlayersList(Specification<Player> specification) {
+        return playerRepository.findAll(specification);
     }
 
     @Override
-    public Page<Player> getPlayerList(Specification<Player> specification, Pageable sortedByName) {
-        return null;
+    public Page<Player> getPlayersList(Specification<Player> specification, Pageable pageable) {
+        return playerRepository.findAll(specification, pageable);
     }
 
     @Override
     public Player createPlayer(Player player) {
-        // TODO delete
-        /*
-        if (player == null
-                || player.getName() == null
-                || player.getTitle() == null
-                || player.getRace() == null
-                || player.getProfession() == null
-                || player.getBirthday() == null
-                || player.getExperience() == null) {
-            return null;
-        }
-        */
         if (!checkPlayerParametersCreate(player)) return null;
         if (player.getBanned() == null) player.setBanned(false);
         setLevelAndExperienceUntilNextLevel(player);

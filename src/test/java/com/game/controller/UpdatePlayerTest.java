@@ -176,6 +176,7 @@ public class UpdatePlayerTest extends AbstractTest {
                 .content(String.format(TestsHelper.JSON_SKELETON_2, newTitle, newRace, newProfession, newBirthday)))
                 .andExpect(status().isOk());
 
+
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         PlayerInfoTest actual = mapper.readValue(contentAsString, PlayerInfoTest.class);
 
