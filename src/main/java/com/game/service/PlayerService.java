@@ -16,9 +16,9 @@ public interface PlayerService {
 
     Player createPlayer(Player player) throws InvalidPlayerCustomException;
 
-    Player getPlayer(Long id);
+    Player getPlayer(Long id) throws PlayerNotFoundCustomException;
 
-    Player updatePlayer(Long id, Player player);
+    Player updatePlayer(Long id, Player player) throws PlayerNotFoundCustomException;
 
     boolean deletePlayer(Long id);
 

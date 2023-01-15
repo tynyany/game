@@ -4,6 +4,7 @@ import com.game.entity.Player;
 import com.game.entity.Profession;
 import com.game.entity.Race;
 import com.game.service.InvalidPlayerCustomException;
+import com.game.service.PlayerNotFoundCustomException;
 import com.game.service.PlayerService;
 
 import com.game.specification.PlayerSpecification;
@@ -92,10 +93,12 @@ public class PlayerController {
     @GetMapping("/players/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable(name = "id") Long id) {
         if (id <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        Player player = playerService.getPlayer(id);
-        if (player == null) {
+        try {
+            Player player = playerService.getPlayer(id);
+            return new ResponseEntity<>(player, HttpStatus.OK);
+        } catch (PlayerNotFoundCustomException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else return new ResponseEntity<>(player, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/players/{id}")
@@ -117,11 +120,13 @@ public class PlayerController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if (player.getBirthday() != null && !playerService.checkBirthday(player.getBirthday()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        Player newPlayer = playerService.updatePlayer(id, player);
-        if (newPlayer == null) {
+        try {
+            Player newPlayer = playerService.updatePlayer(id, player);
+            return new ResponseEntity<>(newPlayer, HttpStatus.OK);
+        } catch (PlayerNotFoundCustomException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else return new ResponseEntity<>(newPlayer, HttpStatus.OK);
+        }
+
     }
 
     private Specification<Player> setSpecification(String name,
