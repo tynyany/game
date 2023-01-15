@@ -1,5 +1,7 @@
 package com.game.entity;
 
+
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -27,8 +29,8 @@ public class Player {
     private Profession profession;
 
     @Column(name = "birthday")
+    @Temporal(TemporalType.DATE)
     private Date birthday;
-
     @Column(name = "banned")
     private Boolean banned;
 

@@ -14,7 +14,7 @@ public interface PlayerService {
 
     Page<Player> getPlayersList(Specification<Player> specification, Pageable pageable);
 
-    Player createPlayer(Player player);
+    Player createPlayer(Player player) throws InvalidPlayerCustomException;
 
     Player getPlayer(Long id);
 

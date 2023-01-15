@@ -33,8 +33,8 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public Player createPlayer(Player player) {
-        if (!checkPlayerParametersCreate(player)) return null;
+    public Player createPlayer(Player player) throws InvalidPlayerCustomException {
+        if (!checkPlayerParametersCreate(player)) throw new InvalidPlayerCustomException();
         if (player.getBanned() == null) player.setBanned(false);
         setLevelAndExperienceUntilNextLevel(player);
         return playerRepository.saveAndFlush(player);

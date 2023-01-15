@@ -3,6 +3,7 @@ package com.game.controller;
 import com.game.entity.Player;
 import com.game.entity.Profession;
 import com.game.entity.Race;
+import com.game.service.InvalidPlayerCustomException;
 import com.game.service.PlayerService;
 
 import com.game.specification.PlayerSpecification;
@@ -17,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 
@@ -80,11 +81,11 @@ public class PlayerController {
 
     @PostMapping("/players")
     public ResponseEntity<?> createPlayer(@RequestBody Player player) {
-        Player newPlayer = playerService.createPlayer(player);
-        if (newPlayer == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
+        try {
+            Player newPlayer = playerService.createPlayer(player);
             return new ResponseEntity<>(newPlayer, HttpStatus.OK);
+        } catch (InvalidPlayerCustomException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -146,9 +147,9 @@ public class PlayerController {
         if (profession != null)
             generalSpecification.add(new SearchCriteria("profession", profession, SearchOperation.EQUAL));
         if (after != null)
-            generalSpecification.add(new SearchCriteria("birthday", new Date(after), SearchOperation.GREATER_THAN_EQUAL));
+            generalSpecification.add(new SearchCriteria("birthday", after, SearchOperation.GREATER_THAN_EQUAL_DATE));
         if (before != null)
-            generalSpecification.add(new SearchCriteria("birthday", new Date(before), SearchOperation.LESS_THAN_EQUAL));
+            generalSpecification.add(new SearchCriteria("birthday", before, SearchOperation.LESS_THAN_EQUAL_DATE));
         if (banned != null)
             generalSpecification.add(new SearchCriteria("banned", banned, SearchOperation.EQUAL));
         if (minExperience != null)
